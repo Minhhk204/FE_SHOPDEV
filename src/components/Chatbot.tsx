@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const N8N_API_ENDPOINT = 'https://your-n8n-endpoint.com/webhook/chatbot'; // Đổi endpoint thành thật
+const N8N_API_ENDPOINT = 'https://ef0651.n8nsh.site/webhook-test/ec5cdf33-82a0-446b-bbb3-25647e33cf58'; // Đổi endpoint thành thật
 
 // Cấu trúc tin nhắn có thêm timestamp
 interface Message {
@@ -68,7 +68,7 @@ const Chatbot: React.FC = () => {
                 timestamp: new Date().toLocaleTimeString()
             };
             setMessages((msgs) => [...msgs, botReply]);
-        } catch (e) {
+        } catch {
             // Lỗi trong quá trình gọi API
             setMessages((msgs) => [
                 ...msgs,

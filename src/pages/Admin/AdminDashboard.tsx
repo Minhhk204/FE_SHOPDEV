@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, Package, ShoppingCart, Users, TrendingUp, TrendingDown } from 'lucide-react';
+import { DollarSign, Package, ShoppingCart, Users, TrendingUp } from 'lucide-react';
 import StatsCard from '../../components/Admin/Dashboard/StatsCard';
 import RecentOrders from '../../components/Admin/Dashboard/RecentOrders';
 
@@ -66,7 +66,7 @@ const AdminDashboard: React.FC = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Mock Chart */}
           <div className="h-64 bg-gradient-to-r from-primary-50 to-blue-50 rounded-lg flex items-center justify-center">
             <div className="text-center">

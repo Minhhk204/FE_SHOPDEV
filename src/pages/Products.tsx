@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Filter, Grid, List, ChevronDown } from 'lucide-react';
 import ProductCard from '../components/Product/ProductCard';
-import { products } from '../data/products';
+import productApi from '../api/productApi';
 import { Product } from '../types';
 
 const Products: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
@@ -12,12 +14,25 @@ const Products: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await productApi.getAll();
+        setProducts(data);
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    let filtered = products.filter(product => {
+    const filtered = products.filter(product => {
       const matchesBrand = !selectedBrand || product.brand.toLowerCase() === selectedBrand.toLowerCase();
       const matchesCategory = !selectedCategory || product.category.toLowerCase() === selectedCategory.toLowerCase();
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-      
       return matchesBrand && matchesCategory && matchesPrice;
     });
 
@@ -41,10 +56,12 @@ const Products: React.FC = () => {
     }
 
     return filtered;
-  }, [selectedBrand, selectedCategory, priceRange, sortBy]);
+  }, [products, selectedBrand, selectedCategory, priceRange, sortBy]);
 
   const brands = ['Nike', 'Adidas', 'Vans'];
   const categories = [...new Set(products.map(p => p.category))];
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Đang tải sản phẩm...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -160,7 +177,7 @@ const Products: React.FC = () => {
             {/* Controls */}
             <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-sm">
               <span className="text-gray-600">Tìm thấy {filteredProducts.length} sản phẩm</span>
-              
+
               <div className="flex items-center space-x-4">
                 {/* View Mode */}
                 <div className="flex items-center space-x-1 border border-gray-200 rounded-lg p-1">
@@ -194,8 +211,8 @@ const Products: React.FC = () => {
             </div>
 
             {/* Products Grid */}
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6' 
+            <div className={viewMode === 'grid'
+              ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6'
               : 'space-y-4'
             }>
               {filteredProducts.map((product, index) => (

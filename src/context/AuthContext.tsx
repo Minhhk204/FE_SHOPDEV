@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated: false,
   });
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, _password: string) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     // Mock login - replace with actual API call
     const mockUser: User = {
       id: '1',
@@ -29,21 +29,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       email: email,
       avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
     };
-    
+
     setState({
       user: mockUser,
       isAuthenticated: true,
     });
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, _password: string) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     // Mock registration - replace with actual API call
     const mockUser: User = {
       id: '1',
       name: name,
       email: email,
     };
-    
+
     setState({
       user: mockUser,
       isAuthenticated: true,
