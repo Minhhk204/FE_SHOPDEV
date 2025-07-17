@@ -10,6 +10,7 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Chatbot from './components/Chatbot';
 
 // Admin Components
 import AdminLayout from './pages/Admin/AdminLayout';
@@ -48,6 +49,7 @@ function App() {
                   </Routes>
                 </main>
                 <Footer />
+                <Chatbot />
               </div>
             } />
           </Routes>
