@@ -1,26 +1,26 @@
 import axiosClient from './axiosClient';
-import { User, UserCreationAttributes } from '../types';
+import { User, UserCreationAttributes, AuthResponse } from '../types';
 
 const userApi = {
     // Auth APIs
-    login: async (payload: { email: string; password: string }) => {
-        const res = await axiosClient.post('/api/auth/login', payload);
+    login: async (payload: { email: string; password: string }): Promise<AuthResponse> => {
+        const res = await axiosClient.post<AuthResponse>('/api/auth/login', payload);
         return res.data;
     },
-    register: async (payload: UserCreationAttributes) => {
-        const res = await axiosClient.post('/api/auth/register', payload);
+    register: async (payload: UserCreationAttributes): Promise<AuthResponse> => {
+        const res = await axiosClient.post<AuthResponse>('/api/auth/register', payload);
         return res.data;
     },
-    getCurrentUser: async () => {
-        const res = await axiosClient.get('/api/auth/profile');
+    getCurrentUser: async (): Promise<{ user: User }> => {
+        const res = await axiosClient.get<{ user: User }>('/api/auth/profile');
         return res.data;
     },
-    updateProfile: async (userData: Partial<UserCreationAttributes>) => {
-        const res = await axiosClient.put('/api/auth/profile/update', userData);
+    updateProfile: async (userData: Partial<UserCreationAttributes>): Promise<{ message: string; user: User }> => {
+        const res = await axiosClient.put<{ message: string; user: User }>('/api/auth/profile/update', userData);
         return res.data;
     },
-    changePassword: async (payload: { currentPassword: string; newPassword: string }) => {
-        const res = await axiosClient.put('/api/auth/change-password', payload);
+    changePassword: async (payload: { currentPassword: string; newPassword: string }): Promise<{ message: string }> => {
+        const res = await axiosClient.put<{ message: string }>('/api/auth/change-password', payload);
         return res.data;
     },
 

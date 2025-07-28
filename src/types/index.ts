@@ -47,17 +47,25 @@ export interface UserCreationAttributes {
   role?: "user" | "admin";
 }
 
+// Interface cho response từ backend authController
 export interface User {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
-  isActive: boolean;
+  fullName: string; // Từ backend getter
+  isActive?: boolean;
   lastLogin?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  role: "user" | "admin";
-  fullName?: string;
+  role?: "user" | "admin";
+}
+
+// Interface cho auth response
+export interface AuthResponse {
+  message: string;
+  token: string;
+  user: User;
 }
 
 export interface CartItem {

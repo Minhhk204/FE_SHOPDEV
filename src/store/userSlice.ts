@@ -24,7 +24,7 @@ export const registerUser = createAsyncThunk(
     async (payload: UserCreationAttributes, { rejectWithValue }) => {
         try {
             const response = await userApi.register(payload);
-            return response; // { user, token }
+            return response; // { message, token, user }
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Đăng ký thất bại');
         }
@@ -37,7 +37,7 @@ export const loginUser = createAsyncThunk(
     async (payload: { email: string; password: string }, { rejectWithValue }) => {
         try {
             const response = await userApi.login(payload);
-            return response; // { user, token }
+            return response; // { message, token, user }
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Đăng nhập thất bại');
         }
@@ -63,7 +63,7 @@ export const updateProfile = createAsyncThunk(
     async (userData: Partial<UserCreationAttributes>, { rejectWithValue }) => {
         try {
             const response = await userApi.updateProfile(userData);
-            return response; // { user }
+            return response; // { message, user }
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Không thể cập nhật thông tin');
         }
