@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import userApi from '../api/userApi';
-import { User, UserCreationAttributes } from '../types';
+import { User, UserCreationAttributes } from '../types/index';
 
 interface UserState {
     user: User | null;
@@ -20,7 +20,7 @@ const initialState: UserState = {
 
 // Async thunk cho đăng ký
 export const registerUser = createAsyncThunk(
-    'user/registerUser',
+    '/register',
     async (payload: UserCreationAttributes, { rejectWithValue }) => {
         try {
             const response = await userApi.register(payload);
