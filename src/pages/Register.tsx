@@ -40,9 +40,9 @@ const Register: React.FC = () => {
         <div className="text-center">
           <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
             <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">SH</span>
+              <span className="text-white font-bold">M</span>
             </div>
-            <span className="text-2xl font-bold text-gray-900">SneakerHub</span>
+            <span className="text-2xl font-bold text-gray-900">MSneaker</span>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Tạo tài khoản mới</h2>
           <p className="mt-2 text-gray-600">Tham gia cộng đồng yêu giày thể thao</p>

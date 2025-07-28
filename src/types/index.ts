@@ -1,33 +1,68 @@
-export interface Product {
-  id: string;
+export interface ProductAttributes {
+  id: number;
   name: string;
-  brand: 'Nike' | 'Adidas' | 'Vans';
+  description?: string;
   price: number;
-  originalPrice?: number;
-  image: string;
-  images: string[];
-  description: string;
-  category: string;
-  sizes: number[];
-  colors: string[];
-  rating: number;
-  reviewCount: number;
-  isNew?: boolean;
-  isFeatured?: boolean;
+  stock: number;
+  imageUrl?: string;
+  categoryId?: number;
+  brandId?: number;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  description?: string;
+  price: number;
+  stock: number;
+  imageUrl?: string;
+  categoryId?: number;
+  brandId?: number;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface UserAttributes {
+  id: number;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+  lastLogin?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  role: "user" | "admin";
+}
+
+export interface UserCreationAttributes {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role?: "user" | "admin";
+}
+
+export interface User {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+  lastLogin?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  role: "user" | "admin";
+  fullName?: string;
 }
 
 export interface CartItem {
   product: Product;
-  size: number;
-  color: string;
   quantity: number;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
 }
 
 export interface Review {
