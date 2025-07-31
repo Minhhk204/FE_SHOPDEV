@@ -53,12 +53,8 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  fullName: string; // Từ backend getter
-  isActive?: boolean;
-  lastLogin?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-  role?: "user" | "admin";
+  lastLogin?: Date; 
+  role: 'user' | 'admin';
 }
 
 // Interface cho auth response
