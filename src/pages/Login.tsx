@@ -1,28 +1,46 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../store';
+import { loginUser } from '../store/userSlice';
+import { RootState } from '../store';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { loading, error, isLoggedIn, user } = useSelector((state: RootState) => state.user);
+
+  // Lấy trang trước đó từ state hoặc mặc định là home
+  const from = location.state?.from?.pathname || '/';
+
+  // Redirect sau khi đăng nhập thành công
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      // Nếu là admin, chuyển đến admin dashboard
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        // Nếu là user, chuyển đến trang trước đó hoặc home
+        navigate(from);
+      }
+    }
+  }, [isLoggedIn, user, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      await login(email, password);
-      navigate('/');
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      setIsLoading(false);
+
+    if (password.length < 6) {
+      alert('Mật khẩu phải có ít nhất 6 ký tự');
+      return;
     }
+
+    dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -40,6 +58,12 @@ const Login: React.FC = () => {
         </div>
 
         <form className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-sm" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -109,10 +133,10 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={loading}
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
 
           <div className="text-center">

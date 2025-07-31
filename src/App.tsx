@@ -1,7 +1,9 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './store';
+import { getCurrentUser } from './store/userSlice';
 import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Home from './pages/Home';
@@ -11,6 +13,8 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Chatbot from './components/Chatbot';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 
 // Admin Components
 import AdminLayout from './pages/Admin/AdminLayout';
@@ -19,43 +23,70 @@ import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
 
 function App() {
-  return (
-    <AuthProvider>
-      <CartProvider>
-        <Router>
-          <Routes>
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="orders" element={<AdminOrders />} />
-              <Route path="customers" element={<div className="p-6"><h1 className="text-2xl font-bold">Quản Lý Khách Hàng</h1></div>} />
-              <Route path="analytics" element={<div className="p-6"><h1 className="text-2xl font-bold">Thống Kê</h1></div>} />
-              <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Cài Đặt</h1></div>} />
-            </Route>
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user);
 
-            {/* Public Routes */}
-            <Route path="/*" element={
+  // Kiểm tra token khi app khởi động
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && !isLoggedIn) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch, isLoggedIn]);
+
+  return (
+    <CartProvider>
+      <Router>
+        <Routes>
+          {/* Admin Routes - Chỉ admin mới truy cập được */}
+          <Route path="/admin" element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }>
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="customers" element={<div className="p-6"><h1 className="text-2xl font-bold">Quản Lý Khách Hàng</h1></div>} />
+            <Route path="analytics" element={<div className="p-6"><h1 className="text-2xl font-bold">Thống Kê</h1></div>} />
+            <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Cài Đặt</h1></div>} />
+          </Route>
+
+          {/* Protected Routes - Cần đăng nhập */}
+          <Route path="/cart" element={
+            <ProtectedRoute>
               <div className="min-h-screen flex flex-col font-inter">
                 <Header />
                 <main className="flex-1">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/product/:id" element={<ProductDetail />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                  </Routes>
+                  <Cart />
                 </main>
                 <Footer />
                 <Chatbot />
               </div>
-            } />
-          </Routes>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+            </ProtectedRoute>
+          } />
+
+          {/* Public Routes */}
+          <Route path="/*" element={
+            <div className="min-h-screen flex flex-col font-inter">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </main>
+              <Footer />
+              <Chatbot />
+            </div>
+          } />
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 }
 

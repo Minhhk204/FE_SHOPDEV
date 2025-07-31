@@ -33,7 +33,7 @@ export interface UserAttributes {
   firstName: string;
   lastName: string;
   isActive: boolean;
-  lastLogin?: Date;
+  lastLogin?: string;
   createdAt?: Date;
   updatedAt?: Date;
   role: "user" | "admin";
@@ -44,20 +44,19 @@ export interface UserCreationAttributes {
   password: string;
   firstName: string;
   lastName: string;
-  role?: "user" | "admin";
 }
 
-// Interface cho response từ backend authController
 export interface User {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
-  lastLogin?: Date; 
+  fullName: string;
+  lastLogin?: string;
   role: 'user' | 'admin';
+  avatar?: string;
 }
 
-// Interface cho auth response
 export interface AuthResponse {
   message: string;
   token: string;

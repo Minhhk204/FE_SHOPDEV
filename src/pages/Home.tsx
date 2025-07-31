@@ -1,13 +1,20 @@
 import React from 'react';
 import Hero from '../components/Home/Hero';
 import FeaturedProducts from '../components/Home/FeaturedProducts';
+import WelcomeMessage from '../components/WelcomeMessage';
 
 const Home: React.FC = () => {
   return (
     <div className="min-h-screen">
       <Hero />
+
+      {/* Welcome Message */}
+      <div className="container mx-auto px-4">
+        <WelcomeMessage />
+      </div>
+
       <FeaturedProducts />
-      
+
       {/* Newsletter Section */}
       <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700">
         <div className="container mx-auto px-4 text-center">

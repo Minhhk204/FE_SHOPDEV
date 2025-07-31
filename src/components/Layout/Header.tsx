@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, User, Search, Menu, X, Heart } from 'lucide-react';
+import { ShoppingBag, User, Search, Menu, X, Heart, Settings, LogOut } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store';
+import { logout } from '../../store/userSlice';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { state: cartState } = useCart();
-  const { state: authState, logout } = useAuth();
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsMenuOpen(false);
+  };
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -61,19 +69,36 @@ const Header: React.FC = () => {
             >
               <Search className="w-5 h-5" />
             </button>
-            
-            {authState.isAuthenticated ? (
+
+            {isLoggedIn ? (
               <div className="relative group">
                 <button className="flex items-center space-x-2 p-2 text-gray-700 hover:text-primary-600 transition-colors">
-                  {authState.user?.avatar ? (
-                    <img src={authState.user.avatar} alt="Avatar" className="w-6 h-6 rounded-full" />
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt="Avatar" className="w-6 h-6 rounded-full" />
                   ) : (
                     <User className="w-5 h-5" />
                   )}
-                  <span className="text-sm font-medium">{authState.user?.name}</span>
+                  <span className="text-sm font-medium">{user?.fullName}</span>
                 </button>
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <div className="py-2">
+                    {/* Admin Menu */}
+                    {user?.role === 'admin' && (
+                      <>
+                        <Link to="/admin" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                          Dashboard
+                        </Link>
+                        <Link to="/admin/products" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                          Quản lý sản phẩm
+                        </Link>
+                        <Link to="/admin/orders" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                          Quản lý đơn hàng
+                        </Link>
+                        <div className="border-t border-gray-100 my-1"></div>
+                      </>
+                    )}
+
+                    {/* User Menu */}
                     <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                       Hồ Sơ
                     </Link>
@@ -81,7 +106,7 @@ const Header: React.FC = () => {
                       Đơn Hàng
                     </Link>
                     <button
-                      onClick={logout}
+                      onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
                     >
                       Đăng Xuất
@@ -135,10 +160,31 @@ const Header: React.FC = () => {
               <Link to="/about" className="text-gray-700 hover:text-primary-600 font-medium">
                 Giới Thiệu
               </Link>
+
+              {/* Admin Mobile Menu */}
+              {isLoggedIn && user?.role === 'admin' && (
+                <>
+                  <div className="border-t border-gray-200 pt-4">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                      Admin Panel
+                    </h3>
+                    <Link to="/admin" className="block text-gray-700 hover:text-primary-600 font-medium">
+                      Dashboard
+                    </Link>
+                    <Link to="/admin/products" className="block text-gray-700 hover:text-primary-600 font-medium">
+                      Quản lý sản phẩm
+                    </Link>
+                    <Link to="/admin/orders" className="block text-gray-700 hover:text-primary-600 font-medium">
+                      Quản lý đơn hàng
+                    </Link>
+                  </div>
+                </>
+              )}
+
               <div className="flex items-center justify-between pt-4 border-t">
                 <div className="flex items-center space-x-4">
-                  {authState.isAuthenticated ? (
-                    <span className="text-sm text-gray-600">Xin chào, {authState.user?.name}</span>
+                  {isLoggedIn ? (
+                    <span className="text-sm text-gray-600">Xin chào, {user?.fullName}</span>
                   ) : (
                     <Link to="/login" className="text-primary-600 font-medium">
                       Đăng Nhập
@@ -159,6 +205,17 @@ const Header: React.FC = () => {
                   </Link>
                 </div>
               </div>
+
+              {/* Mobile Logout */}
+              {isLoggedIn && (
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Đăng Xuất</span>
+                </button>
+              )}
             </nav>
           </div>
         )}

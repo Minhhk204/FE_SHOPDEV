@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  BarChart3, 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../store/userSlice';
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  BarChart3,
   Settings,
   LogOut,
   ChevronLeft,
@@ -19,6 +21,13 @@ interface AdminSidebarProps {
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Tổng Quan', path: '/admin' },
@@ -30,9 +39,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) =>
   ];
 
   return (
-    <div className={`bg-gray-900 text-white transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-64'
-    } min-h-screen relative`}>
+    <div className={`bg-gray-900 text-white transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'
+      } min-h-screen relative`}>
       {/* Toggle Button */}
       <button
         onClick={onToggle}
@@ -56,14 +64,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) =>
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
-          
+
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors ${
-                isActive ? 'bg-primary-600 text-white border-r-2 border-primary-400' : ''
-              }`}
+              className={`flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors ${isActive ? 'bg-primary-600 text-white border-r-2 border-primary-400' : ''
+                }`}
             >
               <Icon className="w-5 h-5" />
               {!isCollapsed && <span className="ml-3">{item.label}</span>}
@@ -74,7 +81,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) =>
 
       {/* Logout */}
       <div className="absolute bottom-4 left-0 right-0 px-4">
-        <button className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors rounded-lg">
+        <button
+          onClick={handleLogout}
+          className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-red-600 hover:text-white transition-colors rounded-lg"
+        >
           <LogOut className="w-5 h-5" />
           {!isCollapsed && <span className="ml-3">Đăng Xuất</span>}
         </button>
