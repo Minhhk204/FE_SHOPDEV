@@ -13,8 +13,9 @@ const FeaturedProducts: React.FC = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  // Lấy 6 sản phẩm đầu tiên để hiển thị
-  const featuredProducts = products.slice(0, 6);
+
+  // Đảm bảo products là mảng, tránh lỗi khi products undefined/null
+  const featuredProducts = Array.isArray(products) ? products.slice(0, 6) : [];
 
   if (loading) {
     return (
@@ -68,9 +69,11 @@ const FeaturedProducts: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {featuredProducts.filter(Boolean).map((product) =>
+              product && product.id ? (
+                <ProductCard key={product.id} product={product} />
+              ) : null
+            )}
           </div>
         )}
 
