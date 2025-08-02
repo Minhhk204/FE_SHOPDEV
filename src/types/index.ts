@@ -12,6 +12,16 @@ export interface ProductAttributes {
   updatedAt?: Date;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -22,8 +32,10 @@ export interface Product {
   categoryId?: number;
   brandId?: number;
   isActive?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
+  category?: Category;
+  brand?: Brand;
 }
 
 export interface UserAttributes {
