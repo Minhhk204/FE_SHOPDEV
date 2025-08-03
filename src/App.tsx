@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './store';
+import { RootState, AppDispatch } from './store';
 import { getCurrentUser } from './store/userSlice';
 import { CartProvider } from './context/CartContext';
 import Header from './components/Layout/Header';
@@ -12,6 +12,7 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import About from './pages/About';
 import Chatbot from './components/Chatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -23,7 +24,7 @@ import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user);
 
   // Kiểm tra token khi app khởi động
@@ -77,6 +78,7 @@ function App() {
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/about" element={<About />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>

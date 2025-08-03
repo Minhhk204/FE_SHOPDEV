@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../../store/productSlice';
-import { RootState } from '../../store';
+import { RootState, AppDispatch } from '../../store';
 import ProductCard from '../Product/ProductCard';
 
 const FeaturedProducts: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { products, loading, error } = useSelector((state: RootState) => state.product);
 
   useEffect(() => {
