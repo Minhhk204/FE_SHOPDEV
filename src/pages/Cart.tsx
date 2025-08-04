@@ -7,15 +7,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/index";
 import { showInfoToast, showSuccessToast } from "../utils/toast";
 import { formatPrice } from "../utils/format.price";
+import { useDispatch } from "react-redux";
+import { updateCartItem , deleteCartItem} from "../store/cartSlice";
 
 const Cart: React.FC = () => {
   //   const { state, dispatch } = useCart();
+  const dispatch = useDispatch()
   const { listCartItem, totalPrice, totalProduct } = useSelector(
     (state: RootState) => state.cart
   );
 
   const updateQuantity = (itemId: string, newQuantity: number) => {
-    console.log("...", itemId, "....", newQuantity);
 
     if (newQuantity <= 0) {
       //   dispatch({ type: 'REMOVE_ITEM', payload: itemId });
@@ -23,12 +25,14 @@ const Cart: React.FC = () => {
     } else {
       //   dispatch({ type: 'UPDATE_QUANTITY', payload: { id: itemId, quantity: newQuantity } });
       // update số lượng
+	  dispatch(updateCartItem({id:itemId,cartItem: { quantity: newQuantity}}))
     }
   };
 
   const removeItem = (itemId: string) => {
     showSuccessToast(`Xóa Item ${itemId}`);
     // dispatch({ type: 'REMOVE_ITEM', payload: itemId });
+	dispatch(deleteCartItem(itemId))
   };
 
   if (listCartItem.length === 0) {
@@ -79,7 +83,6 @@ const Cart: React.FC = () => {
               const brand = item.productSize.products.brandId;
               const size = item.productSize.size;
               const itemPrice = item.productSize.products.price;
-
               const itemId = `${item.productSize.id}`;
               return (
                 <div
@@ -108,7 +111,7 @@ const Cart: React.FC = () => {
                       <div className="flex items-center border border-gray-200 rounded-lg">
                         <button
                           onClick={() =>
-                            updateQuantity(itemId, item.quantity - 1)
+                            updateQuantity(item.id, item.quantity - 1)
                           }
                           className="p-2 hover:bg-gray-50 transition-colors"
                         >
@@ -119,7 +122,7 @@ const Cart: React.FC = () => {
                         </span>
                         <button
                           onClick={() =>
-                            updateQuantity(itemId, item.quantity + 1)
+                            updateQuantity(item.id, item.quantity + 1)
                           }
                           className="p-2 hover:bg-gray-50 transition-colors"
                         >
@@ -135,7 +138,7 @@ const Cart: React.FC = () => {
                         </p>
                       </div>
                       <button
-                        onClick={() => removeItem(itemId)}
+                        onClick={() => removeItem(item.id)}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                       >
                         <X className="w-5 h-5" />

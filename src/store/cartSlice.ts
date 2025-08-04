@@ -103,9 +103,6 @@ const cartSlice = createSlice({
         state.listCartItem = action.payload;
 		state.totalPrice = action.payload.reduce((sum, item) => sum + item.productSize.products.price* item.quantity, 0)
 		state.totalProduct = action.payload.reduce((sum, item) => sum + item.quantity, 0)
-
-		console.log("listCart ...",state.listCartItem);
-		
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
@@ -147,7 +144,7 @@ const cartSlice = createSlice({
           (p) => p.id === action.payload.id
         );
         if (index !== -1) {
-          state.listCartItem[index] = action.payload;
+          state.listCartItem[index].quantity = action.payload.quantity;
         }
 		state.totalPrice = state.listCartItem.reduce((sum, item) => sum + item.productSize.products.price* item.quantity, 0);
 		state.totalProduct = state.listCartItem.reduce((sum, item) => sum + item.quantity, 0);
@@ -163,7 +160,7 @@ const cartSlice = createSlice({
       })
       .addCase(deleteCartItem.fulfilled, (state, action) => {
         state.loading = false;
-        state.listCartItem = state.listCart.findAll(
+        state.listCartItem = state.listCartItem.filter(
           (p) => p.id !== action.payload
         );
 		state.totalPrice = state.listCartItem.reduce((sum, item) => sum + item.productSize.products.price* item.quantity, 0);

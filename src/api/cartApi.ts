@@ -11,11 +11,11 @@ const cartApi = {
         return res.data;
     },
     update: async (id: number, cartItem: Partial<CartItemAttributies>): Promise<CartItem> => {
-        const res = await axiosClient.put<CartItem>(`/api/product/admin/update-product/${id}`, cartItem);
-        return res.data;
+        const res = await axiosClient.put<CartItem>(`/api/cart-items/update/${id}`, cartItem);
+        return res.data.item;
     },
     delete: async (id: number): Promise<void> => {
-        await axiosClient.delete(`/api/product/admin/delete-product/${id}`);
+        await axiosClient.delete(`/api/cart-items/delete/${id}`);
     },
     
 };
