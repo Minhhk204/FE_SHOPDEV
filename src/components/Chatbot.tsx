@@ -5,7 +5,7 @@ import { createChat } from '@n8n/chat';
 const Chatbot = () => {
 	useEffect(() => {
 		createChat({
-			webhookUrl: 'https://ef0651.n8nsh.site/webhook/444bf81d-47db-4f41-83d1-12bcaad70f42/chat'
+			webhookUrl: 'https://ef0651.n8nsh.site/webhook/de7a7274-d014-445f-8908-4ec21f99aab0/chat'
 		});
 	}, []);
 

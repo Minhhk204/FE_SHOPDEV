@@ -12,12 +12,13 @@
   "dependencies": {
     "@n8n/chat": "^0.47.0",
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^6.8.1"
+    "react-router-dom": "^6.8.1",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

@@ -1,26 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart } from 'lucide-react';
-import { Product } from '../../types';
+import React from "react";
+import { Link } from "react-router-dom";
+import { ShoppingCart, Heart } from "lucide-react";
+import { Product } from "../../types";
+import { showSuccessToast } from "../../utils/toast";
+import { formatPrice } from "../../utils/format.price";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
   const getImageUrl = (product: Product) => {
     if (product.imageUrl) {
       return product.imageUrl;
     }
     // Fallback image nếu không có imageUrl
-    return 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=500';
+    return "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=500";
+  };
+  const handleAddToCart = () => {
+    showSuccessToast("Đã thêm thành công!");
   };
 
   return (
@@ -96,10 +94,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Add to Cart Button */}
         <button
           disabled={product.stock <= 0}
+          onClick={handleAddToCart}
           className="w-full mt-4 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
         >
           <ShoppingCart className="w-4 h-4" />
-          <span>{product.stock <= 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</span>
+          <span>{product.stock <= 0 ? "Hết hàng" : "Thêm vào giỏ"}</span>
         </button>
       </div>
     </div>

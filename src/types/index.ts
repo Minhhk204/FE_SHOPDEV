@@ -75,9 +75,20 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface ProductSize{
+	productSizeId: number;
+	productId: Product;
+}
+
 export interface CartItem {
-  product: Product;
+  productSizeId: number;
   quantity: number;
+  productSize: ProductSize
+}
+
+export interface CartItemAttributies{
+	productSizeId: number;
+	quantity: number;
 }
 
 export interface Review {

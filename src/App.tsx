@@ -16,12 +16,15 @@ import About from './pages/About';
 import Chatbot from './components/Chatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import { ToastContainer } from 'react-toastify';
+
 
 // Admin Components
 import AdminLayout from './pages/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
+import { fetchCart } from './store/cartSlice';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,6 +35,8 @@ function App() {
     const token = localStorage.getItem('token');
     if (token && !isLoggedIn) {
       dispatch(getCurrentUser());
+      dispatch(fetchCart());
+
     }
   }, [dispatch, isLoggedIn]);
 
@@ -84,6 +89,7 @@ function App() {
               </main>
               <Footer />
               <Chatbot />
+			  <ToastContainer />
             </div>
           } />
         </Routes>
