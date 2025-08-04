@@ -3,8 +3,8 @@ import { Product, ProductAttributes } from '../types';
 
 const productApi = {
     getAll: async (): Promise<Product[]> => {
-        const res = await axiosClient.get<Product[]>('/api/products');
-        return res.data;
+        const res = await axiosClient.get<Product[]>('/api/product/list');
+        return res.data.products;
     },
     getActiveProducts: async (): Promise<Product[]> => {
         const res = await axiosClient.get<Product[]>('/api/product/list?isActive=true');

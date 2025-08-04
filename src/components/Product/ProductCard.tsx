@@ -4,12 +4,15 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { Product } from "../../types";
 import { showSuccessToast } from "../../utils/toast";
 import { formatPrice } from "../../utils/format.price";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+	const dispatch = useDispatch()
   const getImageUrl = (product: Product) => {
     if (product.imageUrl) {
       return product.imageUrl;
@@ -18,6 +21,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=500";
   };
   const handleAddToCart = () => {
+	  console.log(product);
+	  
+	  dispatch(addToCart({productSizeId: product.product_sizes[0].id, quantity: 1}))
     showSuccessToast("Đã thêm thành công!");
   };
 

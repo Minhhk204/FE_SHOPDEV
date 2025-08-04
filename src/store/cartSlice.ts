@@ -121,7 +121,7 @@ const cartSlice = createSlice({
           (p) => p.id === action.payload.id
         );
         if (index !== -1) {
-          state.listCartItem[index] = action.payload;
+			state.listCartItem[index].quantity = action.payload.quantity;
         } else {
 			// nếu chưa có thì thêm mới vaod danh sách
 			state.listCartItem.push(action.payload);

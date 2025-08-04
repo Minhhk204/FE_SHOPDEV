@@ -8,7 +8,7 @@ const cartApi = {
     },
     create: async (cartItem: Partial<CartItemAttributies>): Promise<CartItem> => {
         const res = await axiosClient.post<CartItem>('/api/cart-items/add', cartItem);
-        return res.data;
+        return res.data.cartItem;
     },
     update: async (id: number, cartItem: Partial<CartItemAttributies>): Promise<CartItem> => {
         const res = await axiosClient.put<CartItem>(`/api/cart-items/update/${id}`, cartItem);
