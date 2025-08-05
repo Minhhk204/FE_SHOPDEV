@@ -1,3 +1,4 @@
+import { showSuccessToast } from './../utils/toast';
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import cartApi from "../api/cartApi";
 import { CartItem, CartItemAttributies } from "../types/index";
@@ -40,6 +41,7 @@ export const addToCart = createAsyncThunk(
   async (cartItem: Partial<CartItemAttributies>, { rejectWithValue }) => {
     try {
       const response = await cartApi.create(cartItem);
+	  showSuccessToast("Thêm vào giỏ hàng thành công")
       return response;
     } catch (error: any) {
       return rejectWithValue(

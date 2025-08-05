@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Heart, Truck, Shield, RotateCcw, Plus, Minus, ShoppingBag } from 'lucide-react';
-import { products } from '../data/products';
-import { useCart } from '../context/CartContext';
+import productApi from '../api/productApi';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../store/cartSlice';
+import { formatPrice } from '../utils/format.price';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const product = products.find(p => p.id === id);
-  const { dispatch } = useCart();
 
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [dataProduct, setDataProduct ] = useState();
+  const dispatch = useDispatch()
 
-  if (!product) {
+
+  useEffect(() => {
+	  console.log('id...', id)
+	  getProductDetail(id)
+}, [id]);
+
+const getProductDetail = async (id: string) => {
+	const response = await productApi.getById(parseInt(id));
+	console.log('response productDEtail ...',response)
+	setDataProduct(response)
+
+}
+
+  if (!ProductDetail) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -28,22 +43,14 @@ const ProductDetail: React.FC = () => {
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize || !selectedColor) {
+    if (!selectedSize) {
       alert('Vui lòng chọn size và màu sắc');
       return;
     }
 
-    dispatch({
-      type: 'ADD_ITEM',
-      payload: {
-        product,
-        size: selectedSize,
-        color: selectedColor,
-        quantity
-      }
-    });
+    // dispatch add to cart truyền vào sizeID
+	dispatch(addToCart({productSizeId: selectedSize, quantity: quantity}))
 
-    alert('Đã thêm vào giỏ hàng!');
   };
 
   const brandColors = {
@@ -61,7 +68,7 @@ const ProductDetail: React.FC = () => {
           <span>/</span>
           <Link to="/products" className="hover:text-primary-600">Sản Phẩm</Link>
           <span>/</span>
-          <span className="text-gray-900">{product.name}</span>
+          <span className="text-gray-900">{dataProduct?.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -69,12 +76,12 @@ const ProductDetail: React.FC = () => {
           <div className="space-y-4">
             <div className="aspect-square bg-white rounded-xl overflow-hidden shadow-sm">
               <img
-                src={product.images[selectedImageIndex]}
-                alt={product.name}
+                src={dataProduct?.imageUrl}
+                alt={dataProduct?.name}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            {/* <div className="grid grid-cols-4 gap-2">
               {product.images.map((image, index) => (
                 <button
                   key={index}
@@ -86,21 +93,21 @@ const ProductDetail: React.FC = () => {
                   <img src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Product Info */}
           <div className="space-y-6">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-sm font-semibold ${brandColors[product.brand]}`}>
-                  {product.brand}
+                <span className={`text-sm font-semibold`}>
+                  {dataProduct?.brand.name}
                 </span>
                 <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
                   <Heart className="w-5 h-5" />
                 </button>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">{dataProduct?.name}</h1>
               
               <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center space-x-1">
@@ -109,7 +116,7 @@ const ProductDetail: React.FC = () => {
                       <Star
                         key={i}
                         className={`w-4 h-4 ${
-                          i < Math.floor(product.rating) 
+                          i < Math.floor(4.5) 
                             ? 'fill-yellow-400 text-yellow-400' 
                             : 'text-gray-300'
                         }`}
@@ -117,50 +124,50 @@ const ProductDetail: React.FC = () => {
                     ))}
                   </div>
                   <span className="text-sm text-gray-600">
-                    {product.rating} ({product.reviewCount} đánh giá)
+                    {4.5} ({100} đánh giá)
                   </span>
                 </div>
               </div>
 
               <div className="flex items-center space-x-3 mb-6">
-                <span className="text-3xl font-bold text-gray-900">${product.price}</span>
-                {product.originalPrice && (
+                <span className="text-3xl font-bold text-gray-900">{formatPrice(dataProduct?.price|| 0)}</span>
+                {/* {product.originalPrice && (
                   <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
                 )}
                 {product.originalPrice && (
                   <span className="px-2 py-1 bg-red-100 text-red-700 text-sm font-medium rounded">
                     Tiết kiệm ${product.originalPrice - product.price}
                   </span>
-                )}
+                )} */}
               </div>
             </div>
 
             <div className="space-y-4">
-              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed">{dataProduct?.description}</p>
             </div>
 
             {/* Size Selection */}
             <div>
               <h3 className="font-semibold text-gray-900 mb-3">Size</h3>
               <div className="grid grid-cols-6 gap-2">
-                {product.sizes.map(size => (
+                {dataProduct?.product_sizes.map(productSize => (
                   <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
+                    key={productSize.size}
+                    onClick={() => setSelectedSize(productSize.id)}
                     className={`py-3 px-2 text-center border rounded-lg transition-colors ${
-                      selectedSize === size
+                      selectedSize === productSize.id
                         ? 'border-primary-600 bg-primary-50 text-primary-600'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    {size}
+                    {productSize.size}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Color Selection */}
-            <div>
+            {/* <div>
               <h3 className="font-semibold text-gray-900 mb-3">Màu Sắc</h3>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map(color => (
@@ -177,7 +184,7 @@ const ProductDetail: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Quantity */}
             <div>
