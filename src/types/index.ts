@@ -12,6 +12,13 @@ export interface ProductAttributes {
   updatedAt?: Date;
 }
 
+export interface ProductSizeAttributes {
+  id: number;
+  size: number;
+  productId: number;
+  stock: number;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -65,7 +72,7 @@ export interface User {
   lastName: string;
   fullName: string;
   lastLogin?: string;
-  role: 'user' | 'admin';
+  role: "user" | "admin";
   avatar?: string;
 }
 
@@ -75,20 +82,20 @@ export interface AuthResponse {
   user: User;
 }
 
-export interface ProductSize{
-	productSizeId: number;
-	productId: Product;
+export interface ProductSize {
+  productSizeId: number;
+  productId: Product;
 }
 
 export interface CartItem {
   productSizeId: number;
   quantity: number;
-  productSize: ProductSize
+  productSize: ProductSize;
 }
 
-export interface CartItemAttributies{
-	productSizeId: number;
-	quantity: number;
+export interface CartItemAttributies {
+  productSizeId: number;
+  quantity: number;
 }
 
 export interface Review {

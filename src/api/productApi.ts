@@ -1,5 +1,6 @@
 import axiosClient from './axiosClient';
-import { Product, ProductAttributes } from '../types';
+import { Product, ProductAttributes, ProductSizeAttributes } from '../types';
+import { ProductSize } from '../types';
 
 const productApi = {
     getAll: async (): Promise<Product[]> => {
@@ -24,6 +25,17 @@ const productApi = {
     },
     delete: async (id: number): Promise<void> => {
         await axiosClient.delete(`/api/product/admin/delete-product/${id}`);
+    },
+	createProductSize: async (productSize: Partial<ProductSizeAttributes>): Promise<Product> => {
+        const res = await axiosClient.post<Product>('/api/product-size/admin/create', productSize);
+        return res.data;
+    },		
+	updateProductSize: async (id: number, productSize: Partial<ProductSizeAttributes>): Promise<Product> => {
+        const res = await axiosClient.put<Product>(`/api/product-size/admin/update/${id}`, productSize);
+        return res.data;
+    },
+    deleteProductSize: async (id: number): Promise<void> => {
+        await axiosClient.delete(`/api/product-size/admin/delete/${id}`);
     },
     // Thêm API cho admin
 	// Dùng update để chuyển trạng thái (active) cho product thì sử dụng hàm update bên trên
