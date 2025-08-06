@@ -11,7 +11,7 @@ const productApi = {
         return res.data.products;
     },
     getById: async (id: number): Promise<Product> => {
-        const res = await axiosClient.get<Product>(`/api/product/detail/${id}`);
+        const res = await axiosClient.get<Product>(`/api/product/details/${id}`);
         return res.data;
     },
     create: async (product: Partial<ProductAttributes>): Promise<Product> => {
