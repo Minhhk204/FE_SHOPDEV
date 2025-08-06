@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import productApi from '../../../api/productApi';
+import { showErrorToast } from '../../../utils/toast';
 
 interface EditProductFormProps {
   isOpen: boolean;
@@ -62,8 +63,10 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ isOpen, onClose, onSu
       await productApi.update(product.id, submitData);
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating product:', error);
+      const message = error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật sản phẩm';
+      showErrorToast(message);
     } finally {
       setLoading(false);
     }

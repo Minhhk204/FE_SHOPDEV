@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import productApi from '../../../api/productApi';
+import { showErrorToast } from '../../../utils/toast';
 
 interface AddProductFormProps {
   isOpen: boolean;
@@ -56,8 +57,10 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose, onSucc
         categoryId: '',
         brandId: ''
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating product:', error);
+      const message = error.response?.data?.message || 'Có lỗi xảy ra khi thêm sản phẩm';
+      showErrorToast(message);
     } finally {
       setLoading(false);
     }

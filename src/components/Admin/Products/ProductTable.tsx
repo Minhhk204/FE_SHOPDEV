@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Eye, Plus } from "lucide-react";
 import productApi from "../../../api/productApi";
 import AddProductForm from "./AddProductForm";
 import EditProductForm from "./EditProductForm";
+import { showErrorToast } from "../../../utils/toast";
 
 const ProductTable: React.FC = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [listProduct, setListProduct] = useState<any[] | undefined>();
   const itemsPerPage = 20;
@@ -61,8 +64,10 @@ const ProductTable: React.FC = () => {
       try {
         await productApi.delete(productId);
         getListProduct();
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting product:', error);
+        const message = error.response?.data?.message || 'Có lỗi xảy ra khi xóa sản phẩm';
+        showErrorToast(message);
       }
     }
   };
@@ -182,7 +187,10 @@ const ProductTable: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900 transition-colors">
+                    <button 
+                      onClick={() => navigate(`/admin/products/${product.id}`)}
+                      className="text-blue-600 hover:text-blue-900 transition-colors"
+                    >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
