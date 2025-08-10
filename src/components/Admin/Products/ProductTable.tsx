@@ -5,6 +5,7 @@ import productApi from "../../../api/productApi";
 import AddProductForm from "./AddProductForm";
 import EditProductForm from "./EditProductForm";
 import { showErrorToast } from "../../../utils/toast";
+import { formatPrice, getTotalStock } from "../../../utils/format.price";
 
 const ProductTable: React.FC = () => {
   const navigate = useNavigate();
@@ -60,13 +61,14 @@ const ProductTable: React.FC = () => {
   };
 
   const handleDelete = async (productId: number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
       try {
         await productApi.delete(productId);
         getListProduct();
       } catch (error: any) {
-        console.error('Error deleting product:', error);
-        const message = error.response?.data?.message || 'Có lỗi xảy ra khi xóa sản phẩm';
+        console.error("Error deleting product:", error);
+        const message =
+          error.response?.data?.message || "Có lỗi xảy ra khi xóa sản phẩm";
         showErrorToast(message);
       }
     }
@@ -82,7 +84,7 @@ const ProductTable: React.FC = () => {
         <h3 className="text-lg font-semibold text-gray-900">
           Quản Lý Sản Phẩm
         </h3>
-        <button 
+        <button
           onClick={() => setShowAddForm(true)}
           className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
         >
@@ -106,6 +108,9 @@ const ProductTable: React.FC = () => {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Giá
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tổng Kho
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Đánh Giá
@@ -162,13 +167,18 @@ const ProductTable: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    ${product.price}
+                    {formatPrice(product.price)}
                   </div>
                   {product.originalPrice && (
                     <div className="text-sm text-gray-500 line-through">
                       ${product.originalPrice}
                     </div>
                   )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">
+                    {getTotalStock(product)}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -187,19 +197,19 @@ const ProductTable: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center space-x-2">
-                    <button 
+                    <button
                       onClick={() => navigate(`/admin/products/${product.id}`)}
                       className="text-blue-600 hover:text-blue-900 transition-colors"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleEdit(product)}
                       className="text-green-600 hover:text-green-900 transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(product.id)}
                       className="text-red-600 hover:text-red-900 transition-colors"
                     >
@@ -252,14 +262,14 @@ const ProductTable: React.FC = () => {
           </button>
         </div>
       </div>
-      
-      <AddProductForm 
+
+      <AddProductForm
         isOpen={showAddForm}
         onClose={() => setShowAddForm(false)}
         onSuccess={getListProduct}
       />
-      
-      <EditProductForm 
+
+      <EditProductForm
         isOpen={showEditForm}
         onClose={() => setShowEditForm(false)}
         onSuccess={getListProduct}

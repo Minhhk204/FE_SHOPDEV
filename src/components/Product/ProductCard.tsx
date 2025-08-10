@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Heart } from "lucide-react";
 import { Product } from "../../types";
 import { showSuccessToast } from "../../utils/toast";
-import { formatPrice } from "../../utils/format.price";
+import { formatPrice, getTotalStock } from "../../utils/format.price";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 
@@ -91,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {formatPrice(product.price)}
             </p>
             <p className="text-sm text-gray-500">
-              Còn lại: {product.stock} sản phẩm
+              Còn lại: {getTotalStock(product)} sản phẩm
             </p>
           </div>
         </div>

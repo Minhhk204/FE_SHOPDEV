@@ -5,6 +5,7 @@ import productApi from "../../../api/productApi";
 import productSizeApi from "../../../api/productSizeApi";
 import { Product, ProductSizeAttributes } from "../../../types";
 import { showErrorToast } from "../../../utils/toast";
+import { formatPrice, getTotalStock } from "../../../utils/format.price";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -130,7 +131,8 @@ const ProductDetail: React.FC = () => {
             <p className="text-gray-600 mb-4">{product.description}</p>
             <div className="space-y-2">
               <p>
-                <span className="font-medium">Giá:</span> ${product.price}
+                <span className="font-medium">Giá:</span>
+                {formatPrice(product.price)}
               </p>
               <p>
                 <span className="font-medium">Thương hiệu:</span>{" "}
@@ -145,7 +147,8 @@ const ProductDetail: React.FC = () => {
                   : product.category}
               </p>
               <p>
-                <span className="font-medium">Tổng kho:</span> {product.stock}
+                <span className="font-medium">Tổng kho:</span>{" "}
+                {getTotalStock(product)}
               </p>
             </div>
           </div>
